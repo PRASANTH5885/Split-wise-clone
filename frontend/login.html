@@ -1,0 +1,54 @@
+// frontend/login.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; }
+    button { cursor: pointer; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Login</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+  <p>Don't have an account? <a href="index.html">Register here</a></p>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      const email = e.target.email.value.trim();
+      const password = e.target.password.value;
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Login failed';
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorMsg.textContent = 'Network error';
+      }
+    });
+  </script>
+</body>
+</html>

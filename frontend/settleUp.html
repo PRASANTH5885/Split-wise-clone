@@ -1,0 +1,93 @@
+<!-- frontend/settleUp.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settle Up - Splitwise Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Your existing styles here */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 600px;
+    }
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #007BFF;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    li:hover {
+      background-color: #e9e9e9;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </nav>
+
+  <h1>Settle Up - Select a Group</h1>
+  <ul id="groupsList">Loading groups...</ul>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('logoutLink').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+
+    async function fetchGroups() {
+      const res = await fetch('http://localhost:5000/api/groups', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const ul = document.getElementById('groupsList');
+      if (res.ok) {
+        const groups = await res.json();
+        ul.innerHTML = '';
+        if (groups.length === 0) {
+          ul.innerHTML = '<li>You do not participate in any groups.</li>';
+          return;
+        }
+        groups.forEach(group => {
+          const li = document.createElement('li');
+          li.textContent = group.name;
+          li.onclick = () => {
+            // Navigate to group transactions page for selected group
+            window.location.href = `groupTransactions.html?groupId=${group._id}`;
+          };
+          ul.appendChild(li);
+        });
+      } else {
+        ul.innerHTML = '<li>Failed to load groups.</li>';
+      }
+    }
+
+    fetchGroups();
+  </script>
+</body>
+</html>

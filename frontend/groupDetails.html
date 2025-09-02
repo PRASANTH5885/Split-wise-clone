@@ -1,0 +1,102 @@
+<!-- frontend/groupDetails.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Group Details - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 700px; }
+    h1, h2 { margin-bottom: 10px; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; padding: 8px; }
+    button { padding: 6px 12px; cursor: pointer; margin-bottom: 20px; }
+    #membersList { margin-bottom: 20px; }
+    nav a { margin-right: 15px; text-decoration: none; color: #007BFF; }
+    nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Back to Dashboard</a>
+  </nav>
+  <h1 id="groupName">Loading...</h1>
+  <section>
+    <h2>Members</h2>
+    <ul id="membersList">
+      <li>Loading members...</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Expenses</h2>
+    <button id="addExpenseBtn">+ Add Expense</button>
+    <ul id="expensesList">
+      <li>Loading expenses...</li>
+    </ul>
+  </section>
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+    
+    // Parse groupId from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const groupId = urlParams.get('groupId');
+    if (!groupId) {
+      alert('No group specified');
+      window.location.href = 'dashboard.html';
+    }
+    console.log('groupId from URL:', groupId);
+    // Updated: Pass the groupId explicitly in navigation URL to addExpense.html
+    document.getElementById('addExpenseBtn').addEventListener('click', () => {
+      window.location.href = `addExpense.html?groupId=${groupId}`;
+    });
+    async function fetchGroupData() {
+      const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const group = await res.json();
+        document.getElementById('groupName').textContent = group.name || 'Group Details';
+        const membersUl = document.getElementById('membersList');
+        membersUl.innerHTML = '';
+        if (group.members && group.members.length > 0) {
+          group.members.forEach(m => {
+            const li = document.createElement('li');
+            li.textContent = m.name || m.email || 'Member';
+            membersUl.appendChild(li);
+          });
+        } else {
+          membersUl.innerHTML = '<li>No members found.</li>';
+        }
+      } else {
+        alert('Failed to load group details');
+        window.location.href = 'dashboard.html';
+      }
+    }
+    async function fetchExpenses() {
+      const res = await fetch(`http://localhost:5000/api/expenses?groupId=${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const ul = document.getElementById('expensesList');
+      if (res.ok) {
+        const expenses = await res.json();
+        ul.innerHTML = '';
+        if (expenses.length === 0) {
+          ul.innerHTML = '<li>No expenses in this group.</li>';
+          return;
+        }
+        expenses.forEach(exp => {
+          const li = document.createElement('li');
+          li.textContent = `${exp.description} — ₹${exp.amount} — Paid by ${exp.paidBy?.name || 'N/A'} on ${new Date(exp.date).toLocaleDateString()}`;
+          ul.appendChild(li);
+        });
+      } else {
+        ul.innerHTML = '<li>Failed to load expenses</li>';
+      }
+    }
+    fetchGroupData();
+    fetchExpenses();
+  </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!-- frontend/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 10px; }
+    #activityList { list-style: none; padding: 0; }
+    #activityList li { margin-bottom: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .summary { margin-bottom: 20px; }
+    .balance { font-weight: bold; }
+    button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+    nav { margin-bottom: 20px; }
+    nav a { margin-right: 15px; text-decoration: none; color: #007BFF; }
+    nav a:hover { text-decoration: underline; }
+    #greeting { margin-bottom: 15px; font-size: 1.2em; }
+    .quick-actions { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <div id="greeting">Loading user info...</div>
+
+  <nav>
+    <a href="newgroup.html">Create New Group</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="friends.html">Friends</a>
+    <a href="account.html">Account Settings</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </nav>
+
+  <div class="quick-actions">
+    <button id="addExpenseBtn">Add Expense</button>
+    <button onclick="window.location.href='settleUp.html'">Settle Up</button>
+    <button onclick="window.location.href='allgroups.html'">View All Groups</button>
+  </div>
+
+  <section class="summary">
+    <div class="balance">
+      <span>You Owe: ₹<span id="youOwe">0</span></span> |
+      <span>You Are Owed: ₹<span id="youAreOwed">0</span></span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Recent Activity</h2>
+    <ul id="activityList">
+      <li>Loading activities...</li>
+    </ul>
+  </section>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    async function fetchUser() {
+      const res = await fetch('http://localhost:5000/api/auth/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const greetingDiv = document.getElementById('greeting');
+      if (res.ok) {
+        const user = await res.json();
+        greetingDiv.textContent = `Welcome, ${user.name}!`;
+      } else {
+        greetingDiv.textContent = `Welcome!`;
+      }
+    }
+
+    async function fetchBalances() {
+      const res = await fetch('http://localhost:5000/api/dashboard', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('youOwe').textContent = data.youOwe.toFixed(2);
+        document.getElementById('youAreOwed').textContent = data.youAreOwed.toFixed(2);
+      } else {
+        console.error('Failed to load balances');
+      }
+    }
+
+    async function fetchActivity() {
+      const res = await fetch('http://localhost:5000/api/activity', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const ul = document.getElementById('activityList');
+      if (res.ok) {
+        const activity = await res.json();
+        ul.innerHTML = '';
+        if (activity.length === 0) {
+          ul.innerHTML = '<li>No recent activity.</li>';
+          return;
+        }
+        activity.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          ul.appendChild(li);
+        });
+      } else {
+        ul.innerHTML = '<li>Failed to load recent activity</li>';
+      }
+    }
+
+    document.getElementById('logoutLink').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+
+    document.getElementById('addExpenseBtn').addEventListener('click', () => {
+      window.location.href = 'allgroups.html';
+    });
+
+    fetchUser();
+    fetchBalances();
+    fetchActivity();
+  </script>
+</body>
+</html>

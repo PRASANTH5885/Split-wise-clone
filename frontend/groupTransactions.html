@@ -1,0 +1,161 @@
+<!-- frontend/groupTransactions.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Group Transactions - Splitwise Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 600px;
+    }
+    nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #007BFF;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    section {
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    button {
+      margin-left: 10px;
+      padding: 4px 10px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="settleUp.html">Settle Up</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </nav>
+
+  <h1 id="groupName">Loading Group...</h1>
+
+  <section id="youOweSection">
+    <h2>You Owe</h2>
+    <div id="youOweList"><p>Loading...</p></div>
+  </section>
+
+  <section id="youAreOwedSection">
+    <h2>You Are Owed</h2>
+    <div id="youAreOwedList"><p>Loading...</p></div>
+  </section>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    document.getElementById('logoutLink').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+
+    const groupId = getQueryParam('groupId');
+    if (!groupId) {
+      alert('No group selected.');
+      window.location.href = 'dashboard.html';
+    }
+
+    async function fetchGroupName() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to load group');
+        const group = await res.json();
+        document.getElementById('groupName').textContent = group.name;
+      } catch (err) {
+        document.getElementById('groupName').textContent = 'Error loading group';
+      }
+    }
+
+    async function fetchTransactions() {
+      const youOweList = document.getElementById('youOweList');
+      const youAreOwedList = document.getElementById('youAreOwedList');
+      youOweList.innerHTML = 'Loading...';
+      youAreOwedList.innerHTML = 'Loading...';
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/groupTransactions/group/${groupId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to load transactions');
+        const { youOwe, youAreOwed } = await res.json();
+
+        youOweList.innerHTML = youOwe.length
+          ? '<ul>' + youOwe.map(t =>
+              `<li>You owe ₹${t.amount.toFixed(2)} to ${t.friendName}
+                 <button onclick="settleUp('${t.friendId}', ${t.amount.toFixed(2)})">Settle Up</button>
+               </li>`
+            ).join('') + '</ul>'
+          : '<p>None</p>';
+
+        youAreOwedList.innerHTML = youAreOwed.length
+          ? '<ul>' + youAreOwed.map(t =>
+              `<li>${t.friendName} owes you ₹${t.amount.toFixed(2)}</li>`
+            ).join('') + '</ul>'
+          : '<p>None</p>';
+      } catch (err) {
+        youOweList.textContent = 'Error loading transactions';
+        youAreOwedList.textContent = 'Error loading transactions';
+      }
+    }
+
+    window.settleUp = function(friendId, maxAmount) {
+      const amount = prompt(`Enter amount to settle (max ₹${maxAmount}):`, maxAmount);
+      if (!amount || isNaN(amount) || Number(amount) <= 0 || Number(amount) > maxAmount) return;
+
+      fetch('http://localhost:5000/api/settleup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ friendId, amount: Number(amount), groupId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || 'Settlement recorded!');
+        fetchTransactions();  // Refresh updated balances after settlement
+      })
+      .catch(() => alert('Network error'));
+    };
+
+    fetchGroupName();
+    fetchTransactions();
+  </script>
+</body>
+</html>

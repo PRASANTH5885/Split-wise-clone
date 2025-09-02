@@ -1,0 +1,56 @@
+<!-- frontend/groups.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Group - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 20px auto; padding: 10px; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; }
+    li:hover { background-color: #f0f0f0; }
+    h1 { margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h1>Select a Group</h1>
+  <ul id="groupsList">
+    <li>Loading groups...</li>
+  </ul>
+  <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    async function fetchGroups() {
+      const res = await fetch('http://localhost:5000/api/groups', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const ul = document.getElementById('groupsList');
+      if (res.ok) {
+        const groups = await res.json();
+        ul.innerHTML = '';
+        if (groups.length === 0) {
+          ul.innerHTML = '<li>No groups found. Create one!</li>';
+          return;
+        }
+        groups.forEach(group => {
+          const li = document.createElement('li');
+          li.textContent = group.name;
+          li.addEventListener('click', () => {
+            window.location.href = `addExpense.html?groupId=${group._id}`;
+          });
+          ul.appendChild(li);
+        });
+      } else {
+        ul.innerHTML = '<li>Failed to load groups. Please refresh.</li>';
+      }
+    }
+
+    fetchGroups();
+  </script>
+</body>
+</html>

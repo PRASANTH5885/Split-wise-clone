@@ -1,0 +1,82 @@
+// frontend/account.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Account Settings - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; }
+    button { cursor: pointer; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Account Settings</h1>
+  <form id="accountForm">
+    <input type="text" id="name" placeholder="Name" required />
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="New Password (leave blank to keep)" minlength="6" />
+    <button type="submit">Update Profile</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+  <p><a href="dashboard.html">Back to Dashboard</a></p>
+  <button id="logoutBtn">Logout</button>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    async function fetchUser() {
+      const res = await fetch('http://localhost:5000/api/auth/user', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const user = await res.json();
+        document.getElementById('name').value = user.name || '';
+        document.getElementById('email').value = user.email || '';
+      }
+    }
+
+    document.getElementById('accountForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      const name = e.target.name.value.trim();
+      const email = e.target.email.value.trim();
+      const password = e.target.password.value;
+
+      const body = password ? { name, email, password } : { name, email };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/user', {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Update failed';
+          return;
+        }
+        alert('Profile updated!');
+      } catch (err) {
+        errorMsg.textContent = 'Network error';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    });
+
+    fetchUser();
+  </script>
+</body>
+</html>

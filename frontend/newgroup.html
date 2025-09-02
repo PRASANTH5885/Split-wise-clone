@@ -1,0 +1,65 @@
+<!-- frontend/newgroup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create Group - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; padding: 10px; }
+    input, button { width: 100%; padding: 8px; margin-top: 10px; }
+    button { cursor: pointer; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Create a New Group</h1>
+  <form id="groupForm">
+    <input type="text" id="groupName" placeholder="Group Name" required />
+    <label for="members">Members (emails, comma separated):</label>
+    <input type="text" id="members" placeholder="e.g. user1@example.com, user2@example.com" />
+    <button type="submit">Create Group</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+  <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('groupForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      const name = e.target.groupName.value.trim();
+      const membersRaw = e.target.members.value.trim();
+      let members = [];
+      if (membersRaw) {
+        members = membersRaw.split(',').map(email => email.trim()).filter(Boolean);
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/groups', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name, members })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Failed to create group';
+          return;
+        }
+        alert('Group created successfully!');
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorMsg.textContent = 'Network error';
+      }
+    });
+  </script>
+</body>
+</html>

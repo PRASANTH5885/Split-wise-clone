@@ -1,0 +1,111 @@
+// frontend/addExpense.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Expense - Splitwise Clone</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; padding: 10px; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 10px; }
+    button { cursor: pointer; }
+    .error { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Add Expense</h1>
+  <form id="expenseForm">
+    <input type="number" id="amount" placeholder="Amount" required min="0.01" step="0.01" />
+    <input type="text" id="description" placeholder="Description" required />
+    <input type="date" id="date" required />
+    <label>Participants:</label>
+    <select id="participants" multiple required style="height: 120px;"></select>
+    <button type="submit">Add Expense</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+  <p><a href="#" id="backLink">Back to Group</a></p>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = 'login.html'; }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const groupId = urlParams.get('groupId');
+    if (!groupId) {
+      alert('Group not specified');
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('backLink').href = `groupDetails.html?groupId=${groupId}`;
+    document.getElementById('date').valueAsDate = new Date();
+
+    async function fetchGroupMembers() {
+      const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const select = document.getElementById('participants');
+      if (res.ok) {
+        const group = await res.json();
+        select.innerHTML = '';
+        group.members.forEach(member => {
+          const option = document.createElement('option');
+          option.value = member._id;
+          option.textContent = member.name || member.email || 'Member';
+          select.appendChild(option);
+        });
+      } else {
+        alert('Failed to load group members');
+      }
+    }
+
+    document.getElementById('expenseForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      const amount = parseFloat(e.target.amount.value);
+      const description = e.target.description.value.trim();
+      const date = e.target.date.value;
+      const participantsSelect = e.target.participants;
+      const selectedParticipants = Array.from(participantsSelect.selectedOptions).map(o => o.value);
+
+      if (selectedParticipants.length === 0) {
+        errorMsg.textContent = 'Select at least one participant';
+        return;
+      }
+
+      const splits = selectedParticipants.map(user => ({ user, amount: amount / selectedParticipants.length }));
+
+      try {
+        const res = await fetch('http://localhost:5000/api/expenses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            amount,
+            description,
+            date,
+            groupId,
+            participants: selectedParticipants,
+            splits
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Failed to add expense';
+          return;
+        }
+
+        alert('Expense added successfully!');
+        window.location.href = `groupDetails.html?groupId=${groupId}`;
+      } catch (err) {
+        errorMsg.textContent = 'Network error';
+      }
+    });
+
+    fetchGroupMembers();
+  </script>
+</body>
+</html>
