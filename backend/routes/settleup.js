@@ -6,7 +6,6 @@ const User = require('../models/User');
 const Settlement = require('../models/Settlement');
 const router = express.Router();
 
-// GET balances for logged-in user, grouped by friend, considering all groups
 router.get('/balances', auth, async (req, res) => {
   try {
     const userId = req.userId;
@@ -105,7 +104,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// NEW: GET settlement transactions for a group for the logged-in user
+// GET settlement transactions for a group for the logged-in user
 router.get('/group/:groupId/settlements', auth, async (req, res) => {
   const userId = req.userId;
   const { groupId } = req.params;

@@ -47,7 +47,7 @@
       window.location.href = 'dashboard.html';
     }
     console.log('groupId from URL:', groupId);
-    // Updated: Pass the groupId explicitly in navigation URL to addExpense.html
+    // Pass the groupId explicitly in navigation URL to addExpense.html
     document.getElementById('addExpenseBtn').addEventListener('click', () => {
       window.location.href = `addExpense.html?groupId=${groupId}`;
     });
@@ -87,8 +87,11 @@
           return;
         }
         expenses.forEach(exp => {
+          const paymentDate = new Date(exp.date);
+          const dateOnly = paymentDate.toLocaleDateString();
+          const timeOnly = paymentDate.toLocaleTimeString();
           const li = document.createElement('li');
-          li.textContent = `${exp.description} — ₹${exp.amount} — Paid by ${exp.paidBy?.name || 'N/A'} on ${new Date(exp.date).toLocaleDateString()}`;
+          li.textContent = `${exp.description} — ₹${exp.amount} — Paid by ${exp.paidBy?.name || 'N/A'} on ${dateOnly} at ${timeOnly}`;
           ul.appendChild(li);
         });
       } else {
@@ -100,3 +103,4 @@
   </script>
 </body>
 </html>
+

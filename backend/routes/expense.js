@@ -4,12 +4,11 @@ const auth = require('../middleware/auth');
 const Expense = require('../models/Expense');
 const router = express.Router();
 
-
 // POST /api/expenses - Create a new expense
 router.post('/', auth, async (req, res) => {
   try {
-    const { amount, description, date, groupId, participants } = req.body;
-    if (!amount || !description) 
+    const { amount, description, groupId, participants } = req.body; // removed date from destructuring
+    if (!amount || !description)
       return res.status(400).json({ error: 'Amount and description are required' });
 
     const participantList = participants && participants.length > 0 ? participants : [req.userId];
@@ -21,15 +20,15 @@ router.post('/', auth, async (req, res) => {
       amount: user === req.userId ? -share * (participantList.length - 1) : share
     }));
 
-    // Save expense, with correct date or current date if not provided
+    // Save expense without date field from frontend; backend assigns current datetime
     const newExpense = new Expense({
       paidBy: req.userId,
       amount,
       description,
-      date: date ? new Date(date) : Date.now(), // Ensure date is valid
+      date: new Date(), // always current date and time
       group: groupId || null,
       participants: participantList,
-      splits: splitsData,  // Use backend calculated splits for correctness
+      splits: splitsData,
     });
 
     const expense = await newExpense.save();
@@ -39,7 +38,6 @@ router.post('/', auth, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 
 // GET /api/expenses - Get expenses for logged in user, optionally filtered by group
 router.get('/', auth, async (req, res) => {

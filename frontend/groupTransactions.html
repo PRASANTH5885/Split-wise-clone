@@ -66,6 +66,11 @@
     <div id="youAreOwedList"><p>Loading...</p></div>
   </section>
 
+  <section id="settlementsSection">
+    <h2>Settlements History</h2>
+    <div id="settlementsList"><p>Loading settlements...</p></div>
+  </section>
+
   <script>
     const token = localStorage.getItem('token');
     if (!token) {
@@ -134,6 +139,30 @@
       }
     }
 
+    async function fetchSettlements() {
+      const settlementsDiv = document.getElementById('settlementsList');
+      settlementsDiv.textContent = 'Loading settlements...';
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/settleup/group/${groupId}/settlements`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to load settlements');
+        const settlements = await res.json();
+
+        if (settlements.length === 0) {
+          settlementsDiv.innerHTML = '<p>No settlements recorded.</p>';
+          return;
+        }
+
+        settlementsDiv.innerHTML = '<ul>' + settlements.map(s => `
+          <li>₹${s.amount.toFixed(2)} settled from <strong>${s.fromName}</strong> to <strong>${s.toName}</strong> on ${new Date(s.date).toLocaleString()}</li>
+        `).join('') + '</ul>';
+      } catch (err) {
+        settlementsDiv.textContent = 'Error loading settlements';
+      }
+    }
+
     window.settleUp = function(friendId, maxAmount) {
       const amount = prompt(`Enter amount to settle (max ₹${maxAmount}):`, maxAmount);
       if (!amount || isNaN(amount) || Number(amount) <= 0 || Number(amount) > maxAmount) return;
@@ -149,13 +178,15 @@
       .then(res => res.json())
       .then(data => {
         alert(data.message || 'Settlement recorded!');
-        fetchTransactions();  // Refresh updated balances after settlement
+        fetchTransactions();
+        fetchSettlements();
       })
       .catch(() => alert('Network error'));
     };
 
     fetchGroupName();
     fetchTransactions();
+    fetchSettlements();
   </script>
 </body>
 </html>
