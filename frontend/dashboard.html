@@ -1,56 +1,206 @@
-<!-- frontend/dashboard.html -->
+<!-- File: frontend/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Dashboard - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { margin-bottom: 10px; }
-    #activityList { list-style: none; padding: 0; }
-    #activityList li { margin-bottom: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-    .summary { margin-bottom: 20px; }
-    .balance { font-weight: bold; }
-    button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
-    nav { margin-bottom: 20px; }
-    nav a { margin-right: 15px; text-decoration: none; color: #007BFF; }
-    nav a:hover { text-decoration: underline; }
-    #greeting { margin-bottom: 15px; font-size: 1.2em; }
-    .quick-actions { margin-bottom: 20px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dashboard-container {
+      width: 900px;
+      max-width: 96vw;
+      margin: 40px auto;
+      background: #fff; /* Solid white */
+      border-radius: 24px;
+      box-shadow: 0 8px 32px 0 rgba(28,63,170,0.20);
+      padding: 42px 42px 32px 42px;
+      color: #222b45;
+      text-align: left;
+      backdrop-filter: blur(0px);
+    }
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      margin-bottom: 1.75rem;
+      letter-spacing: 1px;
+      color: #1c3faa;
+    }
+    #greeting {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #222b45;
+    }
+    nav {
+      display: flex;
+      gap: 2rem;
+      font-size: 1.13rem;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: transparent;
+      transition: background-color 0.25s, box-shadow 0.25s;
+      box-shadow: none;
+      color: #1c3faa;
+      font-weight: 600;
+    }
+    nav a:hover,
+    nav a:focus-visible {
+      background-color: #edf5ff;
+      box-shadow: 0 0 0 2px #aad4ff;
+      outline: none;
+    }
+    .quick-actions {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .quick-actions button {
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.67rem 1.7rem;
+      border: none;
+      border-radius: 999px;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 6px 0 rgba(28,63,170,0.14);
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+    #addExpenseBtn {
+      background: linear-gradient(135deg, #1c3faa 65%, #5b9cff 100%);
+      color: #fff;
+    }
+    #addExpenseBtn:hover {
+      background: linear-gradient(135deg, #134191 65%, #378ceb 100%);
+    }
+    .quick-actions button:not(#addExpenseBtn) {
+      background: linear-gradient(135deg, #dae3ef 60%, #b0c0e1 100%);
+      color: #1c3faa;
+      box-shadow: none;
+    }
+    .quick-actions button:not(#addExpenseBtn):hover {
+      background: linear-gradient(135deg, #b0c0e1 60%, #91addb 100%);
+    }
+    .summary {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+    }
+    #youOwe {
+      color: #dc2626;
+      font-weight: 700;
+    }
+    #youAreOwed {
+      color: #16a34a;
+      font-weight: 700;
+    }
+    section h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1c3faa;
+      letter-spacing: 1px;
+    }
+    #activityList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 265px;
+      overflow-y: auto;
+      background: #f4f8ff;
+      border-radius: 16px;
+      box-shadow: 0 2px 7px rgba(28, 63, 170, 0.06);
+      color: #222b45;
+    }
+    #activityList li {
+      margin: 0 0 10px 0;
+      padding: 1rem 1.2rem;
+      background: #e7f1fd;
+      color: #222b45;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.08rem;
+      box-shadow: 0 1px 2px 0 rgba(28,63,170,0.06);
+    }
+    #activityList li.text-red-600 {
+      color: #dc2626;
+      background: #fbdbdb;
+      border-left: 3px solid #dc2626;
+    }
+    /* scrollbar styling */
+    #activityList::-webkit-scrollbar {
+      width: 8px;
+      background: #e7f1fd;
+      border-radius: 8px;
+    }
+    #activityList::-webkit-scrollbar-thumb {
+      background: #1c3faa;
+      border-radius: 8px;
+    }
+    @media (max-width: 980px) {
+      .dashboard-container {
+        width: 98vw;
+        padding: 15px;
+      }
+      nav {
+        gap: 0.7rem;
+        font-size: 1rem;
+        flex-wrap: wrap;
+      }
+      .quick-actions {
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Dashboard</h1>
-  <div id="greeting">Loading user info...</div>
-
-  <nav>
-    <a href="newgroup.html">Create New Group</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="friends.html">Friends</a>
-    <a href="account.html">Account Settings</a>
-    <a href="#" id="logoutLink">Logout</a>
-  </nav>
-
-  <div class="quick-actions">
-    <button id="addExpenseBtn">Add Expense</button>
-    <button onclick="window.location.href='settleUp.html'">Settle Up</button>
-    <button onclick="window.location.href='allgroups.html'">View All Groups</button>
-  </div>
-
-  <section class="summary">
-    <div class="balance">
-      <span>You Owe: ₹<span id="youOwe">0</span></span> |
-      <span>You Are Owed: ₹<span id="youAreOwed">0</span></span>
+  <div class="dashboard-container">
+    <h1>Dashboard</h1>
+    <div id="greeting" aria-live="polite">Loading user info...</div>
+    <nav role="navigation" aria-label="Primary navigation">
+      <a href="newgroup.html">Create New Group</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="friends.html">Friends</a>
+      <a href="account.html">Account Settings</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </nav>
+    <div class="quick-actions">
+      <button id="addExpenseBtn">Add Expense</button>
+      <button onclick="window.location.href='settleUp.html'">Settle Up</button>
+      <button onclick="window.location.href='allgroups.html'">View All Groups</button>
     </div>
-  </section>
-
-  <section>
-    <h2>Recent Activity</h2>
-    <ul id="activityList">
-      <li>Loading activities...</li>
-    </ul>
-  </section>
-
+    <section class="summary" aria-label="Balances summary">
+      <div>
+        <span>You Owe: ₹<span id="youOwe">0.00</span></span> |
+        <span>You Are Owed: ₹<span id="youAreOwed">0.00</span></span>
+      </div>
+    </section>
+    <section aria-label="Recent activity">
+      <h2>Recent Activity</h2>
+      <ul id="activityList" aria-live="polite" aria-relevant="additions removals">
+        <li>Loading activities...</li>
+      </ul>
+    </section>
+  </div>
   <script>
     const token = localStorage.getItem('token');
     if (!token) {
@@ -101,7 +251,7 @@
           ul.appendChild(li);
         });
       } else {
-        ul.innerHTML = '<li>Failed to load recent activity</li>';
+        ul.innerHTML = '<li class="text-red-600">Failed to load recent activity</li>';
       }
     }
 

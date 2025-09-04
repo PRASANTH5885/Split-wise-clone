@@ -1,75 +1,197 @@
-<!-- frontend/groupTransactions.html -->
+<!-- File: frontend/groupTransactions.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Group Transactions - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      max-width: 600px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      color: #134191;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 2rem 0 0.5rem 0;
+      display: flex;
+      justify-content: flex-start;
+      gap: 2rem;
+      font-weight: 600;
     }
     nav a {
-      margin-right: 15px;
+      color: #aad4ff;
       text-decoration: none;
-      color: #007BFF;
+      padding: 0.35rem 1.2rem;
+      border-radius: 99px;
+      font-size: 1.1rem;
+      transition: background 0.3s, color 0.3s;
     }
-    nav a:hover {
-      text-decoration: underline;
+    nav a:hover, nav a:focus-visible {
+      background: rgba(173, 212, 255, 0.2);
+      color: #fff;
+      outline: none;
     }
+
+    .container {
+      width: 100%;
+      max-width: 36rem;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(28, 63, 170, 0.13), 0 1.5px 9px rgba(28,63,170,0.04);
+      padding: 2.2rem 2.4rem 2.5rem 2.4rem;
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     h1 {
-      margin-bottom: 20px;
+      margin: 0 0 2rem 0;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #2563eb;
+      letter-spacing: 0.01em;
+      text-align: center;
     }
-    section {
-      margin-bottom: 20px;
+    h2 {
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem 0;
+      color: #2859d9;
+      letter-spacing: 0.01em;
+      text-align: left;
     }
-    ul {
-      list-style: none;
-      padding: 0;
+
+    .info-box {
+      background: linear-gradient(135deg, #f4f7ff 80%, #eaf4ff 100%);
+      border-radius: 18px;
+      box-shadow: 0 1.5px 12px rgba(2,32,105,0.07);
+      padding: 1.2rem 1.7rem;
+      margin-bottom: 0.4rem;
+      min-width: 100%;
+      font-size: 1.13rem;
+      color: #222b45;
+      font-weight: 500;
+      margin-top: 0.7rem;
+      letter-spacing: 0.01em;
+      position: relative;
+      transition: box-shadow 0.23s;
     }
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+
+    .info-box ul {
+      list-style: disc inside;
+      margin: 0.6rem 0 0 0;
+      padding-left: 1.2rem;
     }
-    button {
-      margin-left: 10px;
-      padding: 4px 10px;
-      border: none;
-      background: #007BFF;
+    .info-box ul li {
+      margin-bottom: 0.55rem;
+      font-size: 1.08rem;
+      transition: color 0.2s;
+    }
+    .info-box ul li:last-child {
+      margin-bottom: 0;
+    }
+    .info-box ul li strong {
+      color: #1c3faa;
+      font-weight: 700;
+    }
+
+    .info-box p {
+      margin: 0.5rem 0;
+      font-size: 1.05rem;
+      color: #4f63be;
+    }
+
+    .info-box:empty, .info-box ul:empty {
+      min-height: 3rem;
+    }
+
+    /* Settlements */
+    .info-box.history {
+      background: linear-gradient(93deg, #f0f8ff 80%, #e0eaff 100%);
+    }
+    .info-box.history ul li {
+      color: #2859d9;
+    }
+
+    .settleUpBtn {
+      margin-left: 1.2rem;
+      background-color: #2e68ed;
       color: white;
-      border-radius: 3px;
+      border: none;
+      border-radius: 999px;
+      padding: 0.35rem 1.1rem;
+      font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
+      margin-top: 0.1rem;
+      transition: background-color 0.25s, box-shadow 0.18s;
+      box-shadow: 0 1px 4px rgba(68,102,255,0.09);
+      vertical-align: middle;
     }
-    button:hover {
-      background: #0056b3;
+    .settleUpBtn:hover, .settleUpBtn:focus-visible {
+      background-color: #1c3faa;
+      outline: none;
+      box-shadow: 0 2px 4px rgba(28, 63, 170, 0.17);
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        max-width: 99vw;
+        padding: 1.2rem;
+      }
+      h1 {
+        font-size: 1.44rem;
+      }
+      h2 {
+        font-size: 1rem;
+        margin-top: 1rem;
+      }
+      .info-box {
+        padding: 1rem;
+        font-size: 1.01rem;
+        margin-top: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
-  <nav>
+  <nav role="navigation" aria-label="Primary navigation">
     <a href="dashboard.html">Dashboard</a>
     <a href="settleUp.html">Settle Up</a>
     <a href="#" id="logoutLink">Logout</a>
   </nav>
 
-  <h1 id="groupName">Loading Group...</h1>
+  <div class="container">
+    <h1 id="groupName">Loading Group...</h1>
 
-  <section id="youOweSection">
-    <h2>You Owe</h2>
-    <div id="youOweList"><p>Loading...</p></div>
-  </section>
+    <section id="youOweSection">
+      <h2>You Owe</h2>
+      <div id="youOweList" class="info-box" aria-live="polite" aria-relevant="additions removals"><p>Loading...</p></div>
+    </section>
 
-  <section id="youAreOwedSection">
-    <h2>You Are Owed</h2>
-    <div id="youAreOwedList"><p>Loading...</p></div>
-  </section>
+    <section id="youAreOwedSection">
+      <h2>You Are Owed</h2>
+      <div id="youAreOwedList" class="info-box" aria-live="polite" aria-relevant="additions removals"><p>Loading...</p></div>
+    </section>
 
-  <section id="settlementsSection">
-    <h2>Settlements History</h2>
-    <div id="settlementsList"><p>Loading settlements...</p></div>
-  </section>
+    <section id="settlementsSection" class="flex-grow">
+      <h2>Settlements History</h2>
+      <div id="settlementsList" class="info-box history" aria-live="polite" aria-relevant="additions removals"><p>Loading settlements...</p></div>
+    </section>
+  </div>
 
   <script>
     const token = localStorage.getItem('token');
@@ -110,8 +232,8 @@
     async function fetchTransactions() {
       const youOweList = document.getElementById('youOweList');
       const youAreOwedList = document.getElementById('youAreOwedList');
-      youOweList.innerHTML = 'Loading...';
-      youAreOwedList.innerHTML = 'Loading...';
+      youOweList.innerHTML = '<p>Loading...</p>';
+      youAreOwedList.innerHTML = '<p>Loading...</p>';
 
       try {
         const res = await fetch(`http://localhost:5000/api/groupTransactions/group/${groupId}`, {
@@ -122,26 +244,26 @@
 
         youOweList.innerHTML = youOwe.length
           ? '<ul>' + youOwe.map(t =>
-              `<li>You owe ₹${t.amount.toFixed(2)} to ${t.friendName}
-                 <button onclick="settleUp('${t.friendId}', ${t.amount.toFixed(2)})">Settle Up</button>
+              `<li>You owe <strong>₹${t.amount.toFixed(2)}</strong> to <strong>${t.friendName}</strong> 
+                <button onclick="settleUp('${t.friendId}', ${t.amount.toFixed(2)})" class="settleUpBtn">Settle Up</button>
                </li>`
             ).join('') + '</ul>'
           : '<p>None</p>';
 
         youAreOwedList.innerHTML = youAreOwed.length
           ? '<ul>' + youAreOwed.map(t =>
-              `<li>${t.friendName} owes you ₹${t.amount.toFixed(2)}</li>`
+              `<li><strong>${t.friendName}</strong> owes you <strong>₹${t.amount.toFixed(2)}</strong></li>`
             ).join('') + '</ul>'
           : '<p>None</p>';
       } catch (err) {
-        youOweList.textContent = 'Error loading transactions';
-        youAreOwedList.textContent = 'Error loading transactions';
+        youOweList.innerHTML = '<p style="color:#dc2626;">Error loading transactions</p>';
+        youAreOwedList.innerHTML = '<p style="color:#dc2626;">Error loading transactions</p>';
       }
     }
 
     async function fetchSettlements() {
       const settlementsDiv = document.getElementById('settlementsList');
-      settlementsDiv.textContent = 'Loading settlements...';
+      settlementsDiv.innerHTML = '<p>Loading settlements...</p>';
 
       try {
         const res = await fetch(`http://localhost:5000/api/settleup/group/${groupId}/settlements`, {
@@ -156,10 +278,10 @@
         }
 
         settlementsDiv.innerHTML = '<ul>' + settlements.map(s => `
-          <li>₹${s.amount.toFixed(2)} settled from <strong>${s.fromName}</strong> to <strong>${s.toName}</strong> on ${new Date(s.date).toLocaleString()}</li>
+          <li>₹${s.amount.toFixed(2)} settled from <strong>${s.fromName}</strong> to <strong>${s.toName}</strong> <br><span style="font-size:0.96em;color:#6b7280;">${new Date(s.date).toLocaleString()}</span></li>
         `).join('') + '</ul>';
       } catch (err) {
-        settlementsDiv.textContent = 'Error loading settlements';
+        settlementsDiv.innerHTML = '<p style="color:#dc2626;">Error loading settlements</p>';
       }
     }
 

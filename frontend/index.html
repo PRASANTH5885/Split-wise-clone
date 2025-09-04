@@ -1,32 +1,199 @@
-// frontend/index.html
+<!-- File: frontend/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Register - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin-top: 10px; }
-    button { cursor: pointer; }
-    .error { color: red; margin-top: 10px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #181f3c;
+    }
+
+    .auth-container {
+      background: #fff;
+      padding: 2.7rem 2.4rem 2.2rem 2.4rem;
+      border-radius: 28px;
+      box-shadow: 0 6px 30px rgba(28,63,170,0.21), 0 2px 12px rgba(28,63,170,0.09);
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2563eb;
+      text-align: center;
+      margin-bottom: 2.3rem;
+      letter-spacing: 0.03em;
+    }
+
+    label {
+      font-size: 1.07rem;
+      font-weight: 600;
+      color: #2563eb;
+      margin-bottom: 0.6rem;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.82rem 1.13rem;
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      font-size: 1.04rem;
+      background: #f6f9ff;
+      color: #22336c;
+      font-weight: 600;
+      margin-bottom: 0.09rem;
+      transition: border-color 0.2s, box-shadow 0.22s;
+      box-shadow: 0 0.5px 2.5px rgba(28,63,170,0.06);
+      outline: none;
+    }
+    input:focus {
+      border-color: #2563eb;
+      background: #fff;
+      box-shadow: 0 0 0 2px #bae2ff;
+    }
+    input::placeholder {
+      color: #b6c7ea;
+      font-weight: 500;
+    }
+
+    button#submitBtn {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb 65%, #60a5fa 100%);
+      border: none;
+      padding: 0.82rem;
+      margin: 1.7rem 0 0 0;
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.12rem;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.15s;
+      box-shadow: 0 2px 9px rgba(28,63,170,0.14);
+      letter-spacing: 0.01em;
+    }
+    button#submitBtn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #134191 65%, #3698fd 100%);
+      box-shadow: 0 4px 24px rgba(28,63,170,0.11);
+    }
+    button#submitBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #dc2626;
+      font-size: 0.97rem;
+      margin-top: 0.6rem;
+      min-height: 1.2rem;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .subtext {
+      margin-top: 1.5rem;
+      font-size: 1.03rem;
+      text-align: center;
+      color: #2563eb;
+    }
+    .subtext a {
+      color: #2563eb;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0 0.17em;
+      transition: text-decoration 0.2s;
+    }
+    .subtext a:hover {
+      text-decoration: underline;
+      color: #134191;
+    }
+
+    @media (max-width: 520px) {
+      .auth-container {
+        padding: 1.1rem 0.6rem 1.2rem 0.6rem;
+        border-radius: 18px;
+        max-width: 97vw;
+      }
+      h1 {
+        font-size: 1.13rem;
+        margin-bottom: 1.1rem;
+      }
+      label {
+        font-size: 1rem;
+        margin-top: 0.7rem;
+      }
+      input {
+        font-size: 0.98rem;
+        padding: 0.63rem 0.8rem;
+        border-radius: 10px;
+      }
+      button#submitBtn {
+        font-size: 0.98rem;
+        border-radius: 10px;
+        padding: 0.7rem;
+        margin-top: 1.12rem;
+      }
+      .subtext {
+        font-size: 0.97rem;
+        margin-top: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Register</h1>
-  <form id="registerForm">
-    <input type="text" id="name" placeholder="Name" required />
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password (min 6 chars)" required minlength="6" />
-    <button type="submit">Register</button>
-    <div class="error" id="errorMsg"></div>
-  </form>
-  <p>Already have an account? <a href="login.html">Login here</a></p>
+  <div class="auth-container">
+    <h1>Register</h1>
+    <form id="registerForm" novalidate>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Name" required autocomplete="name" />
 
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" required autocomplete="email" />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password (min 6 chars)" required minlength="6" autocomplete="new-password" />
+
+      <button type="submit" id="submitBtn">Register</button>
+      <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
+    </form>
+    <div class="subtext">
+      Already have an account? <a href="login.html">Login here</a>
+    </div>
+  </div>
   <script>
-    document.getElementById('registerForm').addEventListener('submit', async e => {
+    const form = document.getElementById('registerForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
+      submitBtn.disabled = true;
+
+      if (!form.checkValidity()) {
+        errorMsg.textContent = 'Please fill all required fields correctly.';
+        submitBtn.disabled = false;
+        return;
+      }
 
       const name = e.target.name.value.trim();
       const email = e.target.email.value.trim();
@@ -42,6 +209,7 @@
         const data = await res.json();
         if (!res.ok) {
           errorMsg.textContent = data.error || 'Registration failed';
+          submitBtn.disabled = false;
           return;
         }
 
@@ -49,6 +217,7 @@
         window.location.href = 'dashboard.html';
       } catch (err) {
         errorMsg.textContent = 'Network error';
+        submitBtn.disabled = false;
       }
     });
   </script>

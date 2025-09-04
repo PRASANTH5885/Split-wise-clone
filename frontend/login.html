@@ -1,31 +1,170 @@
-// frontend/login.html
+<!-- File: frontend/login.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Login - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin-top: 10px; }
-    button { cursor: pointer; }
-    .error { color: red; margin-top: 10px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background-image: url('images/bg.jpg'); /* Path to background image */
+      background-size: 100% 120%;            
+      background-repeat: no-repeat;
+      background-position: center;
+      display: flex;
+      align-items: center;          /* vertical center */
+      justify-content: center;      /* center horizontally to keep background */
+      position: relative;           /* for absolute positioning children */
+    }
+
+    .login-form {
+      position: absolute;           /* position relative to body */
+      right: 300px;                /* distance from right edge */
+      top: 50%;                   /* vertical center */
+      transform: translateY(-50%);
+      background: rgba(64, 64, 64, 0.15);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      padding: 30px;
+      border-radius: 16px;
+      backdrop-filter: blur(25px);
+      color: white;
+      width: 400px;
+      box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .login-title {
+      font-size: 40px;
+      margin-bottom: 40px;
+    }
+
+    .input-box {
+      margin: 20px 0;
+      position: relative;
+    }
+    .input-box:last-of-type {
+      margin-bottom: 14px; /* Reduced bottom margin for password field */
+    }
+    .input-box input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      padding: 12px 12px 12px 45px;
+      border-radius: 99px;
+      outline: 3px solid transparent;
+      transition: 0.3s;
+      font-size: 17px;
+      color: white;
+      font-weight: 600;
+    }
+    .input-box input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 17px;
+      font-weight: 500;
+    }
+    .input-box input:focus {
+      outline: 3px solid rgba(255, 255, 255, 0.3);
+    }
+    .input-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Removed remember-forgot-box styling since removed from HTML */
+
+    .login-btn {
+      width: 100%;
+      padding: 10px 0;
+      background: #2F9CF4;
+      border: none;
+      border-radius: 99px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px; /* Added margin top to reduce space */
+    }
+    .login-btn:hover {
+      background: #0B87EC;
+    }
+
+    .register {
+      margin-top: 15px;
+      font-size: 15px;
+      color: white;
+    }
+    .register a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .register a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h1>Login</h1>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button type="submit">Login</button>
-    <div class="error" id="errorMsg"></div>
+  <form id="loginForm" class="login-form" novalidate>
+    <h1 class="login-title">Login</h1>
+
+    <div class="input-box">
+      <i class="bx bxs-user"></i>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Email"
+        required
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="input-box">
+      <i class="bx bxs-lock-alt"></i>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        required
+        autocomplete="current-password"
+      />
+    </div>
+
+    <!-- Forgot Password removed -->
+
+    <button type="submit" class="login-btn">Login</button>
+
+    <p class="register">
+      Don't have an account? <a href="index.html">Register here</a>
+    </p>
   </form>
-  <p>Don't have an account? <a href="index.html">Register here</a></p>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async e => {
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const errorMsg = document.getElementById('errorMsg');
-      errorMsg.textContent = '';
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
 
       const email = e.target.email.value.trim();
       const password = e.target.password.value;
@@ -34,19 +173,22 @@
         const res = await fetch('http://localhost:5000/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email, password }),
         });
 
         const data = await res.json();
+
         if (!res.ok) {
-          errorMsg.textContent = data.error || 'Login failed';
+          alert(data.error || 'Login failed');
+          submitBtn.disabled = false;
           return;
         }
 
         localStorage.setItem('token', data.token);
         window.location.href = 'dashboard.html';
       } catch (err) {
-        errorMsg.textContent = 'Network error';
+        alert('Network error');
+        submitBtn.disabled = false;
       }
     });
   </script>

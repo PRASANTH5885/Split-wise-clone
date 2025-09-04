@@ -1,53 +1,159 @@
-<!-- frontend/settleUp.html -->
+<!-- File: frontend/settleUp.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Settle Up - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Your existing styles here */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      max-width: 600px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      color: #1c3faa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    nav {
+      width: 100%;
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 2rem 0 0.5rem 0;
+      display: flex;
+      justify-content: flex-start;
+      gap: 2rem;
+      font-weight: 600;
     }
     nav a {
-      margin-right: 15px;
+      color: #aad4ff;
       text-decoration: none;
-      color: #007BFF;
+      padding: 0.35rem 1.2rem;
+      border-radius: 99px;
+      font-size: 1.1rem;
+      transition: background 0.3s, color 0.3s;
     }
-    nav a:hover {
-      text-decoration: underline;
+    nav a:hover, nav a:focus-visible {
+      background: rgba(173, 212, 255, 0.2);
+      color: #fff;
+      outline: none;
     }
+
+    .container {
+      width: 100%;
+      max-width: 36rem;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(28, 63, 170, 0.15), 0 1.5px 9px rgba(28,63,170,0.06);
+      padding: 2.25rem 2.25rem 2.5rem 2.25rem;
+      margin-top: 2.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     h1 {
-      margin-bottom: 20px;
+      margin: 0 0 2rem 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.01em;
+      text-align: center;
     }
-    ul {
+
+    .groups-box {
+      width: 100%;
+      max-width: 28rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f8fbff 70%, #eaf4fe 100%);
+      box-shadow: 0 1.5px 12px rgba(2,32,105,0.07);
+      padding: 0;
+      margin-bottom: 0.5rem;
+    }
+    ul#groupsList {
       list-style: none;
-      padding-left: 0;
+      padding: 0;
+      margin: 0;
+      font-size: 1.13rem;
+      font-weight: 500;
     }
-    li {
-      padding: 10px;
-      margin-bottom: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
+
+    ul#groupsList li {
+      padding: 1.05rem 1.65rem;
+      border-bottom: 1px solid #e3eaf5;
+      background: transparent;
+      color: #233a5b;
+      border-radius: 0;
       cursor: pointer;
-      border-radius: 4px;
+      transition: background 0.22s, color 0.22s, box-shadow 0.18s;
+      box-shadow: none;
+      letter-spacing: 0.01em;
+      position: relative;
     }
-    li:hover {
-      background-color: #e9e9e9;
+    ul#groupsList li:last-child {
+      border-bottom: none;
+      border-radius: 0 0 18px 18px;
+    }
+
+    ul#groupsList li:hover,
+    ul#groupsList li:focus-visible {
+      background-color: #e9f3ff;
+      color: #134191;
+      box-shadow: 0 0 0 1.5px #60a5fa, 0 4px 11px rgba(28,63,170,0.06);
+      outline: none;
+    }
+
+    ul#groupsList li:active {
+      background: linear-gradient(90deg, #cde6ff 10%, #e9f3ff 100%);
+      color: #2563eb;
+    }
+
+    ul#groupsList li.text-errorRed {
+      color: #dc2626;
+      background: #fff0f0;
+      border-left: 4px solid #dc2626;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        max-width: 99vw;
+        padding: 1rem;
+        margin-top: 2.2rem;
+      }
+      .groups-box {
+        max-width: 99vw;
+        border-radius: 14px;
+      }
+      ul#groupsList li {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
-  <nav>
+  <nav aria-label="Primary navigation">
     <a href="dashboard.html">Dashboard</a>
     <a href="#" id="logoutLink">Logout</a>
   </nav>
 
-  <h1>Settle Up - Select a Group</h1>
-  <ul id="groupsList">Loading groups...</ul>
+  <div class="container">
+    <h1>Settle Up – Select a Group</h1>
+    <div class="groups-box">
+      <ul id="groupsList" aria-live="polite" aria-relevant="additions removals">
+        <li>Loading groups...</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
     const token = localStorage.getItem('token');
@@ -76,17 +182,22 @@
         groups.forEach(group => {
           const li = document.createElement('li');
           li.textContent = group.name;
-          li.onclick = () => {
-            // Navigate to group transactions page for selected group
+          li.tabIndex = 0;
+          li.addEventListener('click', () => {
             window.location.href = `groupTransactions.html?groupId=${group._id}`;
-          };
+          });
+          li.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              li.click();
+            }
+          });
           ul.appendChild(li);
         });
       } else {
-        ul.innerHTML = '<li>Failed to load groups.</li>';
+        ul.innerHTML = '<li class="text-errorRed">Failed to load groups.</li>';
       }
     }
-
     fetchGroups();
   </script>
 </body>

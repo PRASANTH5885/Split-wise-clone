@@ -1,23 +1,106 @@
-<!-- frontend/groups.html -->
+<!-- File: frontend/groups.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Select Group - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; max-width: 500px; margin: 20px auto; padding: 10px; }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; }
-    li:hover { background-color: #f0f0f0; }
-    h1 { margin-bottom: 15px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      max-width: 28rem;
+      margin: 0 auto;
+      padding: 1.25rem;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #aad4ff;
+    }
+
+    ul#groupsList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(255 255 255 / 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(30px);
+      box-shadow: 0 0 40px rgba(28,63,170,0.1);
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    ul#groupsList li {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255 255 255 / 0.2);
+      cursor: pointer;
+      border-radius: 12px 12px 0 0;
+      transition: background-color 0.2s;
+      outline: none;
+    }
+    ul#groupsList li:last-child {
+      border-bottom: none;
+      border-radius: 0 0 12px 12px;
+    }
+    ul#groupsList li:hover,
+    ul#groupsList li:focus-visible {
+      background-color: rgba(173, 212, 255, 0.3);
+      outline: none;
+    }
+
+    p {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    p a {
+      color: #aad4ff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      display: inline-block;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+    p a:hover,
+    p a:focus-visible {
+      background-color: rgba(173, 212, 255, 0.2);
+      box-shadow: 0 0 0 2px #aad4ff;
+      outline: none;
+    }
+
+    /* Scrollbar styles */
+    ul#groupsList::-webkit-scrollbar {
+      width: 8px;
+      background: transparent;
+    }
+    ul#groupsList::-webkit-scrollbar-thumb {
+      background: rgba(255 255 255 / 0.3);
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
   <h1>Select a Group</h1>
-  <ul id="groupsList">
+  <ul id="groupsList" aria-live="polite" aria-relevant="additions removals">
     <li>Loading groups...</li>
   </ul>
-  <p><a href="dashboard.html">Back to Dashboard</a></p>
+  <p>
+    <a href="dashboard.html">Back to Dashboard</a>
+  </p>
 
   <script>
     const token = localStorage.getItem('token');
@@ -40,13 +123,20 @@
         groups.forEach(group => {
           const li = document.createElement('li');
           li.textContent = group.name;
+          li.tabIndex = 0;
           li.addEventListener('click', () => {
             window.location.href = `addExpense.html?groupId=${group._id}`;
+          });
+          li.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              li.click();
+            }
           });
           ul.appendChild(li);
         });
       } else {
-        ul.innerHTML = '<li>Failed to load groups. Please refresh.</li>';
+        ul.innerHTML = '<li class="text-errorRed">Failed to load groups. Please refresh.</li>';
       }
     }
 

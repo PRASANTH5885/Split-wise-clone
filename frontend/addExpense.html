@@ -1,111 +1,284 @@
-// frontend/addExpense.html
+<!-- File: frontend/addexpense.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Add Expense - Splitwise Clone</title>
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; max-width: 400px; margin: 20px auto; padding: 10px; }
-    input, select, button { width: 100%; padding: 8px; margin-top: 10px; }
-    button { cursor: pointer; }
-    .error { color: red; margin-top: 10px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #111;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 28rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.8rem;
+      color: #aad4ff;
+      text-align: center;
+    }
+
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0 0 0 / 0.05);
+      color: #222;
+    }
+
+    label.block {
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #1e40af;
+      font-size: 1.1rem;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #222;
+      background: #f9fafb;
+      outline-offset: 3px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder,
+    select {
+      color: #94a3b8;
+    }
+    input:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.3);
+      outline: none;
+      background: #fff;
+    }
+
+    select[multiple] {
+      height: 7.5rem;
+      border-radius: 15px;
+    }
+
+    button#submitBtn {
+      width: 100%;
+      padding: 1rem 0;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb 30%, #3b82f6 100%);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      margin-top: 0.7rem;
+      letter-spacing: 0.5px;
+      transition: background 0.3s ease;
+    }
+    button#submitBtn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #1e40af 30%, #2563eb 100%);
+    }
+    button#submitBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: #dc2626;
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      min-height: 1.3rem;
+      text-align: center;
+    }
+
+    .back-link {
+      margin-top: 1.8rem;
+    }
+
+    .back-link a {
+      color: #aad4ff;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease, text-decoration 0.3s ease;
+    }
+    .back-link a:hover,
+    .back-link a:focus {
+      color: #60a5fa;
+      text-decoration: underline;
+      outline: none;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+      }
+      .container {
+        max-width: 95vw;
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+      form {
+        padding: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Add Expense</h1>
-  <form id="expenseForm">
-    <input type="number" id="amount" placeholder="Amount" required min="0.01" step="0.01" />
-    <input type="text" id="description" placeholder="Description" required />
-    <input type="date" id="date" required />
-    <label>Participants:</label>
-    <select id="participants" multiple required style="height: 120px;"></select>
-    <button type="submit">Add Expense</button>
-    <div class="error" id="errorMsg"></div>
-  </form>
-  <p><a href="#" id="backLink">Back to Group</a></p>
+  <div class="container">
+    <h1>Add Expense</h1>
+    <form id="expenseForm" novalidate>
+      <label for="amount" class="block">Amount</label>
+      <input type="number" id="amount" name="amount" placeholder="Amount" required min="0.01" step="0.01" />
+
+      <label for="description" class="block">Description</label>
+      <input type="text" id="description" name="description" placeholder="Description" required />
+
+      <label for="date" class="block">Date</label>
+      <input type="date" id="date" name="date" required />
+
+      <label for="participants" class="block">Participants</label>
+      <select id="participants" name="participants" multiple required></select>
+
+      <button type="submit" id="submitBtn">Add Expense</button>
+    </form>
+    <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
+
+    <div class="back-link">
+      <a href="#" id="backLink">Back to Group</a>
+    </div>
+  </div>
 
   <script>
-    const token = localStorage.getItem('token');
-    if (!token) { window.location.href = 'login.html'; }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const groupId = urlParams.get('groupId');
-    if (!groupId) {
-      alert('Group not specified');
-      window.location.href = 'dashboard.html';
+    const token = localStorage.getItem('token')
+    if (!token) {
+      window.location.href = 'login.html'
     }
 
-    document.getElementById('backLink').href = `groupDetails.html?groupId=${groupId}`;
-    document.getElementById('date').valueAsDate = new Date();
+    const urlParams = new URLSearchParams(window.location.search)
+    const groupId = urlParams.get('groupId')
+    if (!groupId) {
+      alert('Group not specified')
+      window.location.href = 'dashboard.html'
+    }
+
+    document.getElementById('backLink').href = `groupDetails.html?groupId=${groupId}`
+
+    document.getElementById('date').valueAsDate = new Date()
 
     async function fetchGroupMembers() {
       const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const select = document.getElementById('participants');
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const select = document.getElementById('participants')
       if (res.ok) {
-        const group = await res.json();
-        select.innerHTML = '';
-        group.members.forEach(member => {
-          const option = document.createElement('option');
-          option.value = member._id;
-          option.textContent = member.name || member.email || 'Member';
-          select.appendChild(option);
-        });
+        const group = await res.json()
+        select.innerHTML = ''
+        group.members.forEach((member) => {
+          const option = document.createElement('option')
+          option.value = member._id
+          option.textContent = member.name || member.email || 'Member'
+          select.appendChild(option)
+        })
       } else {
-        alert('Failed to load group members');
+        alert('Failed to load group members')
       }
     }
 
-    document.getElementById('expenseForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const errorMsg = document.getElementById('errorMsg');
-      errorMsg.textContent = '';
+    const form = document.getElementById('expenseForm')
+    const errorMsg = document.getElementById('errorMsg')
+    const submitBtn = document.getElementById('submitBtn')
 
-      const amount = parseFloat(e.target.amount.value);
-      const description = e.target.description.value.trim();
-      const date = e.target.date.value;
-      const participantsSelect = e.target.participants;
-      const selectedParticipants = Array.from(participantsSelect.selectedOptions).map(o => o.value);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      errorMsg.textContent = ''
+      submitBtn.disabled = true
 
-      if (selectedParticipants.length === 0) {
-        errorMsg.textContent = 'Select at least one participant';
-        return;
+      if (!form.checkValidity()) {
+        errorMsg.textContent = 'Please fill out all fields correctly.'
+        submitBtn.disabled = false
+        return
       }
 
-      const splits = selectedParticipants.map(user => ({ user, amount: amount / selectedParticipants.length }));
+      const amount = parseFloat(e.target.amount.value)
+      const description = e.target.description.value.trim()
+      const date = e.target.date.value
+      const participants = Array.from(
+        e.target.participants.selectedOptions,
+      ).map((o) => o.value)
+
+      if (participants.length === 0) {
+        errorMsg.textContent = 'Select at least one participant'
+        submitBtn.disabled = false
+        return
+      }
+
+      const splits = participants.map((user) => ({
+        user,
+        amount: amount / participants.length,
+      }))
 
       try {
         const res = await fetch('http://localhost:5000/api/expenses', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             amount,
             description,
             date,
             groupId,
-            participants: selectedParticipants,
-            splits
-          })
-        });
+            participants,
+            splits,
+          }),
+        })
 
-        const data = await res.json();
+        const data = await res.json()
         if (!res.ok) {
-          errorMsg.textContent = data.error || 'Failed to add expense';
-          return;
+          errorMsg.textContent = data.error || 'Failed to add expense'
+          submitBtn.disabled = false
+          return
         }
 
-        alert('Expense added successfully!');
-        window.location.href = `groupDetails.html?groupId=${groupId}`;
-      } catch (err) {
-        errorMsg.textContent = 'Network error';
+        alert('Expense added successfully!')
+        window.location.href = `groupDetails.html?groupId=${groupId}`
+      } catch {
+        errorMsg.textContent = 'Network error'
+        submitBtn.disabled = false
       }
-    });
+    })
 
-    fetchGroupMembers();
+    fetchGroupMembers()
   </script>
 </body>
 </html>

@@ -1,25 +1,158 @@
-// frontend/account.html
+<!-- File: frontend/account.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Account Settings - Splitwise Clone</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 400px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin-top: 10px; }
-    button { cursor: pointer; }
-    .error { color: red; margin-top: 10px; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      padding: 1.25rem;
+      max-width: 28rem;
+      margin: 2rem auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #111827; /* dark text on white */
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #1c3faa; /* brand blue */
+      text-align: center;
+    }
+
+    form {
+      background: #ffffff; /* solid white container */
+      padding: 1.5rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 4px 20px rgba(28, 63, 170, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      color: #111827;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      font-weight: 500;
+      outline-offset: 2px;
+      transition: outline-color 0.2s, border-color 0.2s;
+      color: #111827;
+      background-color: #ffffff;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: 2px solid #1c3faa;
+      border-color: #1c3faa;
+    }
+
+    button#submitBtn {
+      width: 100%;
+      background-color: #1c3faa;
+      color: white;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button#submitBtn:hover:not(:disabled) {
+      background-color: #134191;
+    }
+    button#submitBtn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .error {
+      color: #dc2626;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      min-height: 1rem;
+      text-align: center;
+    }
+
+    p {
+      margin-top: 1rem;
+      text-align: center;
+      color: #aad4ff;
+    }
+
+    p a {
+      color: #aad4ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: text-decoration 0.3s ease;
+    }
+    p a:hover {
+      text-decoration: underline;
+    }
+
+    button#logoutBtn {
+      background-color: #dc2626;
+      color: white;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.375rem;
+      margin-top: 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    button#logoutBtn:hover {
+      background-color: #991b1b;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      form {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Account Settings</h1>
-  <form id="accountForm">
-    <input type="text" id="name" placeholder="Name" required />
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="New Password (leave blank to keep)" minlength="6" />
-    <button type="submit">Update Profile</button>
-    <div class="error" id="errorMsg"></div>
+  <form id="accountForm" novalidate>
+    <label for="name" class="sr-only">Name</label>
+    <input type="text" id="name" placeholder="Name" required autocomplete="name" />
+
+    <label for="email" class="sr-only">Email</label>
+    <input type="email" id="email" placeholder="Email" required autocomplete="email" />
+
+    <label for="password" class="sr-only">New Password</label>
+    <input type="password" id="password" placeholder="New Password (leave blank to keep)" minlength="6" autocomplete="new-password" />
+
+    <button type="submit" id="submitBtn">Update Profile</button>
+    <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
   </form>
+
   <p><a href="dashboard.html">Back to Dashboard</a></p>
   <button id="logoutBtn">Logout</button>
 
@@ -30,20 +163,28 @@
     }
 
     async function fetchUser() {
-      const res = await fetch('http://localhost:5000/api/auth/user', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const user = await res.json();
-        document.getElementById('name').value = user.name || '';
-        document.getElementById('email').value = user.email || '';
+      try {
+        const res = await fetch('http://localhost:5000/api/auth/user', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById('name').value = user.name || '';
+          document.getElementById('email').value = user.email || '';
+        }
+      } catch (error) {
+        // silent fail
       }
     }
 
-    document.getElementById('accountForm').addEventListener('submit', async e => {
+    const form = document.getElementById('accountForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
+      submitBtn.disabled = true;
 
       const name = e.target.name.value.trim();
       const email = e.target.email.value.trim();
@@ -54,20 +195,24 @@
       try {
         const res = await fetch('http://localhost:5000/api/auth/user', {
           method: 'PUT',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           },
           body: JSON.stringify(body)
         });
+
         const data = await res.json();
         if (!res.ok) {
           errorMsg.textContent = data.error || 'Update failed';
+          submitBtn.disabled = false;
           return;
         }
         alert('Profile updated!');
+        submitBtn.disabled = false;
       } catch (err) {
         errorMsg.textContent = 'Network error';
+        submitBtn.disabled = false;
       }
     });
 
