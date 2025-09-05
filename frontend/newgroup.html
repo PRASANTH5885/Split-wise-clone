@@ -1,4 +1,4 @@
-<!-- File: frontend/newgroup.html -->
+<!-- File path: frontend/newgroup.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +6,7 @@
   <title>Create Group - Splitwise Clone</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
+    /* CSS styles for newgroup.html */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
     body {
@@ -111,24 +112,26 @@
       text-align: center;
     }
 
+    /* Styling for the Back to Dashboard link */
     .back-link-wrap {
       margin-top: 1.6rem;
       text-align: center;
     }
     .back-link-wrap a {
-      color: #aad4ff;
+      color: #126782;
       font-weight: 700;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       display: inline-block;
       padding: 0.4rem 1.2rem;
       border-radius: 99px;
-      transition: background-color 0.3s, text-decoration 0.3s;
+      transition: background-color 0.3s, text-decoration 0.3s, color 0.3s;
       background: none;
     }
     .back-link-wrap a:hover {
       background-color: rgba(173, 212, 255, 0.18);
       text-decoration: underline;
+      color: #219ebc;
     }
 
     @media (max-width: 480px) {
@@ -147,9 +150,98 @@
   </style>
 </head>
 <body>
+  <!-- Page header -->
   <h1>Create a New Group</h1>
+
+  <!-- Group creation form container -->
   <div class="group-form-container">
     <form id="groupForm" novalidate>
+      <!-- Group Name input -->
       <label for="groupName" class="block">Group Name</label>
       <input
-        type="text
+        type="text"
+        id="groupName"
+        name="groupName"
+        placeholder="Group Name"
+        required
+        autocomplete="off"
+      />
+
+      <!-- Members input -->
+      <label for="members" class="block">Members (emails, comma separated):</label>
+      <input
+        type="text"
+        id="members"
+        name="members"
+        placeholder="e.g. user1@example.com, user2@example.com"
+        autocomplete="off"
+      />
+
+      <!-- Submit button -->
+      <button type="submit" id="submitBtn">Create Group</button>
+
+      <!-- Error message display -->
+      <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
+    </form>
+  </div>
+
+  <!-- Back to Dashboard link -->
+  <div class="back-link-wrap">
+    <a href="dashboard.html">Back to Dashboard</a>
+  </div>
+
+  <!-- Form submission script -->
+  <script>
+    // Redirect to login if token missing
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    const form = document.getElementById('groupForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errorMsg.textContent = '';
+      submitBtn.disabled = true;
+
+      if (!form.checkValidity()) {
+        errorMsg.textContent = 'Please enter a group name.';
+        submitBtn.disabled = false;
+        return;
+      }
+
+      const name = e.target.groupName.value.trim();
+      const membersRaw = e.target.members.value.trim();
+      let members = [];
+      if (membersRaw) {
+        members = membersRaw.split(',').map(email => email.trim()).filter(Boolean);
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/groups', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name, members })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.error || 'Failed to create group';
+          submitBtn.disabled = false;
+          return;
+        }
+        alert('Group created successfully!');
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorMsg.textContent = 'Network error';
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
