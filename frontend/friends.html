@@ -12,11 +12,11 @@
       font-family: 'Poppins', sans-serif;
       margin: 1.25rem auto;
       max-width: 40rem;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      color: white;
+      color: #222b45;
     }
 
     nav {
@@ -24,10 +24,10 @@
       display: flex;
       gap: 1.5rem;
       font-weight: 600;
-      color: #aad4ff;
+      color: #219ebc;
     }
     nav a {
-      color: #aad4ff;
+      color: #219ebc;
       text-decoration: none;
       padding: 0.25rem 0.75rem;
       border-radius: 999px;
@@ -35,25 +35,25 @@
     }
     nav a:hover,
     nav a:focus-visible {
-      background-color: rgba(173, 212, 255, 0.2);
-      box-shadow: 0 0 0 2px #aad4ff;
+      background-color: rgba(33, 158, 188, 0.2);
+      box-shadow: 0 0 0 2px #b6e0fe;
       outline: none;
     }
 
     main {
-      background: #ffffff; /* solid white background */
+      background: #fff;
       border-radius: 16px;
       padding: 2rem;
-      box-shadow: 0 0 40px rgba(28, 63, 170, 0.1);
+      box-shadow: 0 0 40px rgba(33, 158, 188, 0.1);
       flex-grow: 1;
-      color: #222b45; /* dark text for contrast on white */
+      color: #222b45;
     }
 
     h1 {
       font-size: 2.25rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
-      color: #1c3faa; /* brand blue */
+      color: #219ebc;
     }
 
     #friendsList {
@@ -62,15 +62,15 @@
       margin: 0;
       max-height: 400px;
       overflow-y: auto;
-      background: #f9fbff; /* very light blueish white */
+      background: #f4f9ff;
       border-radius: 12px;
-      box-shadow: inset 0 0 6px rgba(255 255 255 / 0.15);
+      box-shadow: inset 0 0 6px rgba(33, 158, 188, 0.15);
       color: #222b45;
       font-size: 1.1rem;
     }
     #friendsList li {
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid #dde6f3;
+      border-bottom: 1px solid #dbe9fb;
       cursor: default;
       font-weight: 500;
     }
@@ -78,12 +78,12 @@
       border-bottom: none;
     }
     #friendsList li.text-errorRed {
-      color: #dc2626;
+      color: #e63946;
       background: #fbeaea;
-      border-left: 4px solid #dc2626;
+      border-left: 4px solid #e63946;
     }
     .text-youOweRed {
-      color: #dc2626;
+      color: #e63946;
       font-weight: 700;
     }
     .text-youAreOwedGreen {
@@ -99,6 +99,18 @@
     #friendsList::-webkit-scrollbar-thumb {
       background: rgba(34, 43, 69, 0.2);
       border-radius: 8px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        margin: 1rem;
+      }
+      main {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>

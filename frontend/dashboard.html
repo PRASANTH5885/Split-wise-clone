@@ -13,7 +13,8 @@
       min-height: 100vh;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      /* Sky blue gradient background (soft and professional) */
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -22,9 +23,9 @@
       width: 900px;
       max-width: 96vw;
       margin: 40px auto;
-      background: #fff; /* Solid white */
+      background: #fff; /* Solid white card */
       border-radius: 24px;
-      box-shadow: 0 8px 32px 0 rgba(28,63,170,0.20);
+      box-shadow: 0 8px 32px 0 rgba(34, 60, 170, 0.18);
       padding: 42px 42px 32px 42px;
       color: #222b45;
       text-align: left;
@@ -35,7 +36,7 @@
       font-weight: 700;
       margin-bottom: 1.75rem;
       letter-spacing: 1px;
-      color: #1c3faa;
+      color: #219ebc; /* deep sky blue */
     }
     #greeting {
       font-size: 1.5rem;
@@ -57,13 +58,13 @@
       background: transparent;
       transition: background-color 0.25s, box-shadow 0.25s;
       box-shadow: none;
-      color: #1c3faa;
+      color: #219ebc;
       font-weight: 600;
     }
     nav a:hover,
     nav a:focus-visible {
-      background-color: #edf5ff;
-      box-shadow: 0 0 0 2px #aad4ff;
+      background-color: #e0f2ff;
+      box-shadow: 0 0 0 2px #b6e0fe;
       outline: none;
     }
     .quick-actions {
@@ -79,24 +80,24 @@
       border: none;
       border-radius: 999px;
       transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 1px 6px 0 rgba(28,63,170,0.14);
+      box-shadow: 0 1px 8px 0 rgba(34, 60, 170, 0.10);
       margin-bottom: 5px;
       cursor: pointer;
     }
     #addExpenseBtn {
-      background: linear-gradient(135deg, #1c3faa 65%, #5b9cff 100%);
+      background: linear-gradient(135deg, #219ebc 65%, #8ecae6 100%);
       color: #fff;
     }
     #addExpenseBtn:hover {
-      background: linear-gradient(135deg, #134191 65%, #378ceb 100%);
+      background: linear-gradient(135deg, #126782 65%, #6db0d2 100%);
     }
     .quick-actions button:not(#addExpenseBtn) {
-      background: linear-gradient(135deg, #dae3ef 60%, #b0c0e1 100%);
-      color: #1c3faa;
+      background: linear-gradient(135deg, #e0f2ff 55%, #cde9ff 100%);
+      color: #219ebc;
       box-shadow: none;
     }
     .quick-actions button:not(#addExpenseBtn):hover {
-      background: linear-gradient(135deg, #b0c0e1 60%, #91addb 100%);
+      background: linear-gradient(135deg, #b6e0fe 60%, #90caf9 100%);
     }
     .summary {
       font-size: 1.3rem;
@@ -105,7 +106,7 @@
       letter-spacing: 1px;
     }
     #youOwe {
-      color: #dc2626;
+      color: #e63946;
       font-weight: 700;
     }
     #youAreOwed {
@@ -116,7 +117,7 @@
       font-size: 1.4rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: #1c3faa;
+      color: #219ebc;
       letter-spacing: 1px;
     }
     #activityList {
@@ -125,34 +126,34 @@
       margin: 0;
       max-height: 265px;
       overflow-y: auto;
-      background: #f4f8ff;
+      background: #eaf6fd;
       border-radius: 16px;
-      box-shadow: 0 2px 7px rgba(28, 63, 170, 0.06);
+      box-shadow: 0 2px 7px rgba(34, 60, 170, 0.08);
       color: #222b45;
     }
     #activityList li {
       margin: 0 0 10px 0;
       padding: 1rem 1.2rem;
-      background: #e7f1fd;
+      background: #d6ebfc;
       color: #222b45;
       border-radius: 12px;
       border: none;
       font-size: 1.08rem;
-      box-shadow: 0 1px 2px 0 rgba(28,63,170,0.06);
+      box-shadow: 0 1px 2px 0 rgba(34, 60, 170, 0.06);
     }
     #activityList li.text-red-600 {
-      color: #dc2626;
-      background: #fbdbdb;
-      border-left: 3px solid #dc2626;
+      color: #e63946;
+      background: #fee2e2;
+      border-left: 3px solid #e63946;
     }
     /* scrollbar styling */
     #activityList::-webkit-scrollbar {
       width: 8px;
-      background: #e7f1fd;
+      background: #d6ebfc;
       border-radius: 8px;
     }
     #activityList::-webkit-scrollbar-thumb {
-      background: #1c3faa;
+      background: #219ebc;
       border-radius: 8px;
     }
     @media (max-width: 980px) {

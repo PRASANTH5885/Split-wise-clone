@@ -13,11 +13,11 @@
       min-height: 100vh;
       margin: 0;
       padding: 1.5rem;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #111;
+      color: #222b45;
     }
 
     .container {
@@ -32,7 +32,7 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin-bottom: 1.8rem;
-      color: #aad4ff;
+      color: #219ebc;
       text-align: center;
     }
 
@@ -44,14 +44,14 @@
       background: #fff;
       padding: 2rem 2.5rem;
       border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0 0 0 / 0.05);
-      color: #222;
+      box-shadow: 0 0 40px rgba(34,60,170, 0.08);
+      color: #222b45;
     }
 
     label.block {
       font-weight: 600;
       margin-bottom: 0.4rem;
-      color: #1e40af;
+      color: #219ebc;
       font-size: 1.1rem;
     }
 
@@ -61,25 +61,27 @@
     select {
       width: 100%;
       padding: 0.85rem 1rem;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #dae3ef;
       border-radius: 99px;
       font-weight: 600;
       font-size: 1rem;
-      color: #222;
-      background: #f9fafb;
+      color: #222b45;
+      background: #f4f8ff;
       outline-offset: 3px;
       transition: border-color 0.3s, box-shadow 0.3s;
+      box-sizing: border-box;
     }
+
     input::placeholder,
     select {
       color: #94a3b8;
     }
     input:focus,
     select:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.3);
+      border-color: #219ebc;
+      box-shadow: 0 0 0 3px rgba(33, 158, 188, 0.22);
       outline: none;
-      background: #fff;
+      background: #e7f1fd;
     }
 
     select[multiple] {
@@ -93,16 +95,17 @@
       font-weight: 700;
       font-size: 1.1rem;
       color: #fff;
-      background: linear-gradient(135deg, #2563eb 30%, #3b82f6 100%);
+      background: linear-gradient(135deg, #219ebc 30%, #8ecae6 100%);
       border: none;
       border-radius: 999px;
       cursor: pointer;
       margin-top: 0.7rem;
       letter-spacing: 0.5px;
       transition: background 0.3s ease;
+      box-shadow: 0 1px 8px 0 rgba(34, 60, 170, 0.05);
     }
     button#submitBtn:hover:not(:disabled) {
-      background: linear-gradient(135deg, #1e40af 30%, #2563eb 100%);
+      background: linear-gradient(135deg, #126782 30%, #6db0d2 100%);
     }
     button#submitBtn:disabled {
       opacity: 0.6;
@@ -110,7 +113,7 @@
     }
 
     .error {
-      color: #dc2626;
+      color: #e63946;
       font-size: 0.9rem;
       margin-top: 0.3rem;
       min-height: 1.3rem;
@@ -122,7 +125,7 @@
     }
 
     .back-link a {
-      color: #aad4ff;
+      color: #219ebc;
       font-weight: 700;
       text-decoration: none;
       font-size: 1rem;
@@ -130,7 +133,7 @@
     }
     .back-link a:hover,
     .back-link a:focus {
-      color: #60a5fa;
+      color: #126782;
       text-decoration: underline;
       outline: none;
     }
@@ -148,6 +151,7 @@
       }
       form {
         padding: 1.5rem;
+        border-radius: 18px;
       }
     }
   </style>

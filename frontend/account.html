@@ -6,162 +6,174 @@
   <title>Account Settings - Splitwise Clone</title>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
-      padding: 1.25rem;
-      max-width: 28rem;
-      margin: 2rem auto;
       min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
+      color: #222b45;
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      color: #111827; /* dark text on white */
     }
 
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: #1c3faa; /* brand blue */
-      text-align: center;
-    }
-
-    form {
-      background: #ffffff; /* solid white container */
-      padding: 1.5rem;
-      border-radius: 0.375rem;
-      box-shadow: 0 4px 20px rgba(28, 63, 170, 0.25);
+    .account-container {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px 0 rgba(34, 60, 170, 0.18);
+      padding: 40px 42px 32px 42px;
+      max-width: 430px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      color: #111827;
     }
-
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #219ebc;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      color: #222b45;
+    }
+    label {
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #222b45;
+    }
     input[type="text"],
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      padding: 1rem;
+      border: 1px solid #dae3ef;
+      border-radius: 12px;
       font-size: 1rem;
       font-weight: 500;
-      outline-offset: 2px;
-      transition: outline-color 0.2s, border-color 0.2s;
-      color: #111827;
-      background-color: #ffffff;
+      background: #f4f8ff;
+      color: #222b45;
+      transition: border 0.2s;
+      box-sizing: border-box;
     }
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      outline: 2px solid #1c3faa;
-      border-color: #1c3faa;
+    input:focus {
+      border-color: #219ebc;
+      outline: none;
+      background: #e7f1fd;
     }
-
-    button#submitBtn {
-      width: 100%;
-      background-color: #1c3faa;
-      color: white;
-      padding: 0.75rem;
+    button[type="submit"] {
+      background: linear-gradient(135deg, #219ebc 65%, #8ecae6 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.12rem;
       border: none;
-      border-radius: 0.375rem;
-      font-weight: 600;
-      font-size: 1rem;
+      border-radius: 12px;
+      padding: 0.95rem 0;
       cursor: pointer;
-      transition: background-color 0.3s;
+      margin-top: 12px;
+      box-shadow: 0 1px 8px 0 rgba(34, 60, 170, 0.10);
+      transition: background 0.3s;
     }
-    button#submitBtn:hover:not(:disabled) {
-      background-color: #134191;
+    button[type="submit"]:hover:not(:disabled) {
+      background: linear-gradient(135deg, #126782 65%, #6db0d2 100%);
     }
-    button#submitBtn:disabled {
-      opacity: 0.5;
-      cursor: default;
+    button[type="submit"]:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
-
     .error {
-      color: #dc2626;
-      font-size: 0.875rem;
-      margin-top: 0.5rem;
-      min-height: 1rem;
+      color: #e63946;
+      font-size: 0.95rem;
+      margin-top: 0.6rem;
+      min-height: 1.2rem;
       text-align: center;
     }
-
-    p {
-      margin-top: 1rem;
+    .bottom-links {
+      margin-top: 22px;
       text-align: center;
-      color: #aad4ff;
+      color: #219ebc;
+      font-size: 1rem;
     }
-
-    p a {
-      color: #aad4ff;
+    .bottom-links a {
+      color: #219ebc;
       text-decoration: none;
-      font-weight: 500;
-      transition: text-decoration 0.3s ease;
+      font-weight: 600;
+      transition: text-decoration 0.2s;
     }
-    p a:hover {
+    .bottom-links a:hover {
       text-decoration: underline;
     }
-
-    button#logoutBtn {
-      background-color: #dc2626;
+    .logout-btn {
+      background-color: #e63946;
       color: white;
-      padding: 0.75rem;
+      padding: 0.8rem;
       border: none;
-      border-radius: 0.375rem;
-      margin-top: 1.5rem;
+      border-radius: 12px;
+      margin-top: 1.2rem;
       font-weight: 600;
       font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s;
       width: 100%;
+      box-shadow: 0 1px 8px 0 rgba(34, 60, 170, 0.10);
     }
-    button#logoutBtn:hover {
+    .logout-btn:hover {
       background-color: #991b1b;
     }
-
-    @media (max-width: 480px) {
-      body {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      form {
-        padding: 1rem;
+    @media (max-width: 520px) {
+      .account-container {
+        max-width: 98vw;
+        padding: 18px 8px;
       }
       h1 {
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        margin-bottom: 1.1rem;
+      }
+      button[type="submit"], .logout-btn {
+        font-size: 0.96rem;
       }
     }
   </style>
 </head>
 <body>
-  <h1>Account Settings</h1>
-  <form id="accountForm" novalidate>
-    <label for="name" class="sr-only">Name</label>
-    <input type="text" id="name" placeholder="Name" required autocomplete="name" />
+  <div class="account-container">
+    <h1>Account Settings</h1>
+    <form id="accountForm" novalidate>
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Name" required autocomplete="name" />
 
-    <label for="email" class="sr-only">Email</label>
-    <input type="email" id="email" placeholder="Email" required autocomplete="email" />
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" required autocomplete="email" />
 
-    <label for="password" class="sr-only">New Password</label>
-    <input type="password" id="password" placeholder="New Password (leave blank to keep)" minlength="6" autocomplete="new-password" />
+      <label for="password">New Password</label>
+      <input type="password" id="password" placeholder="New Password (leave blank to keep)" minlength="6" autocomplete="new-password" />
 
-    <button type="submit" id="submitBtn">Update Profile</button>
-    <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
-  </form>
-
-  <p><a href="dashboard.html">Back to Dashboard</a></p>
-  <button id="logoutBtn">Logout</button>
-
+      <button type="submit" id="submitBtn">Update Profile</button>
+      <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
+    </form>
+    <div class="bottom-links">
+      <a href="dashboard.html">Back to Dashboard</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
   <script>
     const token = localStorage.getItem('token');
     if (!token) {
       window.location.href = 'login.html';
     }
-
     async function fetchUser() {
       try {
         const res = await fetch('http://localhost:5000/api/auth/user', {
@@ -176,22 +188,17 @@
         // silent fail
       }
     }
-
     const form = document.getElementById('accountForm');
     const errorMsg = document.getElementById('errorMsg');
     const submitBtn = document.getElementById('submitBtn');
-
     form.addEventListener('submit', async e => {
       e.preventDefault();
       errorMsg.textContent = '';
       submitBtn.disabled = true;
-
       const name = e.target.name.value.trim();
       const email = e.target.email.value.trim();
       const password = e.target.password.value;
-
       const body = password ? { name, email, password } : { name, email };
-
       try {
         const res = await fetch('http://localhost:5000/api/auth/user', {
           method: 'PUT',
@@ -201,7 +208,6 @@
           },
           body: JSON.stringify(body)
         });
-
         const data = await res.json();
         if (!res.ok) {
           errorMsg.textContent = data.error || 'Update failed';
@@ -215,12 +221,10 @@
         submitBtn.disabled = false;
       }
     });
-
     document.getElementById('logoutBtn').addEventListener('click', () => {
       localStorage.removeItem('token');
       window.location.href = 'login.html';
     });
-
     fetchUser();
   </script>
 </body>

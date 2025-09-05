@@ -14,8 +14,8 @@
       margin: 0 auto;
       padding: 1.25rem;
       min-height: 100vh;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
-      color: white;
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
+      color: #222b45;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -27,13 +27,13 @@
       font-weight: 700;
       margin-bottom: 2.2rem;
       text-align: center;
-      color: #aad4ff;
+      color: #219ebc;
     }
 
     .group-form-container {
       background: #fff;
       border-radius: 20px;
-      box-shadow: 0 8px 32px 0 rgba(28,63,170,0.15);
+      box-shadow: 0 8px 32px 0 rgba(33, 158, 188, 0.15);
       padding: 2rem 2rem 1.5rem 2rem;
       color: #222b45;
       width: 100%;
@@ -51,7 +51,7 @@
     label.block {
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: #1c3faa;
+      color: #126782;
       font-size: 1.08rem;
     }
 
@@ -60,7 +60,7 @@
       padding: 0.95rem;
       border: none;
       border-radius: 99px;
-      background: #f2f6fc;
+      background: #eef5ff;
       color: #222b45;
       font-size: 1rem;
       font-weight: 600;
@@ -74,13 +74,13 @@
     }
 
     input:focus {
-      outline: 2px solid #1c3faa;
-      background: #eef5ff;
+      outline: 2px solid #126782;
+      background: #d9e9ff;
     }
 
     button#submitBtn {
       width: 100%;
-      background: linear-gradient(135deg, #1c3faa 65%, #5b9cff 100%);
+      background: linear-gradient(135deg, #219ebc 65%, #8ecae6 100%);
       border: none;
       padding: 0.95rem;
       border-radius: 99px;
@@ -95,7 +95,7 @@
     }
 
     button#submitBtn:hover:not(:disabled) {
-      background: linear-gradient(135deg, #134191 65%, #378ceb 100%);
+      background: linear-gradient(135deg, #126782 65%, #6db0d2 100%);
     }
 
     button#submitBtn:disabled {
@@ -104,7 +104,7 @@
     }
 
     .error {
-      color: #f87171;
+      color: #e63946;
       font-size: 0.95rem;
       margin-top: 0.25rem;
       min-height: 1.25rem;
@@ -152,82 +152,4 @@
     <form id="groupForm" novalidate>
       <label for="groupName" class="block">Group Name</label>
       <input
-        type="text"
-        id="groupName"
-        name="groupName"
-        placeholder="Group Name"
-        required
-        autocomplete="off"
-      />
-
-      <label for="members" class="block">Members (emails, comma separated):</label>
-      <input
-        type="text"
-        id="members"
-        name="members"
-        placeholder="e.g. user1@example.com, user2@example.com"
-        autocomplete="off"
-      />
-
-      <button type="submit" id="submitBtn">Create Group</button>
-      <div class="error" id="errorMsg" role="alert" aria-live="assertive"></div>
-    </form>
-  </div>
-
-  <div class="back-link-wrap">
-    <a href="dashboard.html">Back to Dashboard</a>
-  </div>
-
-  <script>
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = 'login.html';
-    }
-
-    const form = document.getElementById('groupForm');
-    const errorMsg = document.getElementById('errorMsg');
-    const submitBtn = document.getElementById('submitBtn');
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      errorMsg.textContent = '';
-      submitBtn.disabled = true;
-
-      if (!form.checkValidity()) {
-        errorMsg.textContent = 'Please enter a group name.';
-        submitBtn.disabled = false;
-        return;
-      }
-
-      const name = e.target.groupName.value.trim();
-      const membersRaw = e.target.members.value.trim();
-      let members = [];
-      if (membersRaw) {
-        members = membersRaw.split(',').map(email => email.trim()).filter(Boolean);
-      }
-
-      try {
-        const res = await fetch('http://localhost:5000/api/groups', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ name, members })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          errorMsg.textContent = data.error || 'Failed to create group';
-          submitBtn.disabled = false;
-          return;
-        }
-        alert('Group created successfully!');
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        errorMsg.textContent = 'Network error';
-        submitBtn.disabled = false;
-      }
-    });
-  </script>
-</body>
-</html>
+        type="text

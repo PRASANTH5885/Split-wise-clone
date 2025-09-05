@@ -14,8 +14,8 @@
       margin: 0 auto;
       padding: 1.25rem;
       min-height: 100vh;
-      background: linear-gradient(135deg, #1c3faa 0%, #134191 100%);
-      color: white;
+      background: linear-gradient(135deg, #8ecae6 0%, #b6e0fe 55%, #b6ccfe 100%);
+      color: #222b45;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -26,7 +26,7 @@
       font-weight: 700;
       margin-bottom: 1.5rem;
       text-align: center;
-      color: #aad4ff;
+      color: #219ebc;
     }
 
     ul#groupsList {
@@ -35,17 +35,16 @@
       margin: 0;
       max-height: 400px;
       overflow-y: auto;
-      background: rgba(255 255 255 / 0.15);
+      background: rgba(255 255 255 / 0.85);
       border-radius: 16px;
-      backdrop-filter: blur(30px);
-      box-shadow: 0 0 40px rgba(28,63,170,0.1);
-      color: white;
+      box-shadow: 0 0 40px rgba(33, 158, 188, 0.1);
+      color: #222b45;
       font-size: 1.1rem;
     }
 
     ul#groupsList li {
       padding: 0.75rem 1rem;
-      border-bottom: 1px solid rgba(255 255 255 / 0.2);
+      border-bottom: 1px solid rgba(33, 158, 188, 0.3);
       cursor: pointer;
       border-radius: 12px 12px 0 0;
       transition: background-color 0.2s;
@@ -57,7 +56,7 @@
     }
     ul#groupsList li:hover,
     ul#groupsList li:focus-visible {
-      background-color: rgba(173, 212, 255, 0.3);
+      background-color: rgba(142, 202, 230, 0.6);
       outline: none;
     }
 
@@ -67,7 +66,7 @@
     }
 
     p a {
-      color: #aad4ff;
+      color: #219ebc;
       text-decoration: none;
       font-weight: 600;
       padding: 0.3rem 0.8rem;
@@ -77,8 +76,8 @@
     }
     p a:hover,
     p a:focus-visible {
-      background-color: rgba(173, 212, 255, 0.2);
-      box-shadow: 0 0 0 2px #aad4ff;
+      background-color: rgba(142, 202, 230, 0.4);
+      box-shadow: 0 0 0 2px #219ebc;
       outline: none;
     }
 
@@ -88,7 +87,7 @@
       background: transparent;
     }
     ul#groupsList::-webkit-scrollbar-thumb {
-      background: rgba(255 255 255 / 0.3);
+      background: rgba(33, 158, 188, 0.4);
       border-radius: 8px;
     }
   </style>

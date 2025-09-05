@@ -1,4 +1,3 @@
-// backend/server.js (updated excerpt)
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -25,10 +24,19 @@ const groupTransactionsRouter = require('./routes/groupTransactions');
 app.use('/api/groupTransactions', groupTransactionsRouter);
 
 const frontendPath = path.join(__dirname, '../frontend');
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'getstarted.html'));
+});
+
 app.use(express.static(frontendPath));
 
 const PORT = process.env.PORT || 5000;
+const host = process.env.HOSTNAME || 'localhost';
+const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on ${protocol}://${host}:${PORT}`);
   console.log(`MongoDB connected to ${process.env.MONGO_URI}`);
 });
