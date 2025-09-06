@@ -220,7 +220,7 @@
 
     async function fetchGroupName() {
       try {
-        const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+        const res = await fetch(`https://splitwise-clone-1.onrender.com/api/groups/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load group');
@@ -238,7 +238,7 @@
       youAreOwedList.innerHTML = '<p>Loading...</p>';
 
       try {
-        const res = await fetch(`http://localhost:5000/api/groupTransactions/group/${groupId}`, {
+        const res = await fetch(`https://splitwise-clone-1.onrender.com/api/groupTransactions/group/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load transactions');
@@ -263,12 +263,33 @@
       }
     }
 
+    window.settleUp = function(friendId, maxAmount) {
+      const amount = prompt(`Enter amount to settle (max ₹${maxAmount}):`, maxAmount);
+      if (!amount || isNaN(amount) || Number(amount) <= 0 || Number(amount) > maxAmount) return;
+
+      fetch('https://splitwise-clone-1.onrender.com/api/settleup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ friendId, amount: Number(amount), groupId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || 'Settlement recorded!');
+        fetchTransactions();
+        fetchSettlements();
+      })
+      .catch(() => alert('Network error'));
+    };
+
     async function fetchSettlements() {
       const settlementsDiv = document.getElementById('settlementsList');
       settlementsDiv.innerHTML = '<p>Loading settlements...</p>';
 
       try {
-        const res = await fetch(`http://localhost:5000/api/settleup/group/${groupId}/settlements`, {
+        const res = await fetch(`https://splitwise-clone-1.onrender.com/api/settleup/group/${groupId}/settlements`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to load settlements');
@@ -286,27 +307,6 @@
         settlementsDiv.innerHTML = '<p style="color:#dc2626;">Error loading settlements</p>';
       }
     }
-
-    window.settleUp = function(friendId, maxAmount) {
-      const amount = prompt(`Enter amount to settle (max ₹${maxAmount}):`, maxAmount);
-      if (!amount || isNaN(amount) || Number(amount) <= 0 || Number(amount) > maxAmount) return;
-
-      fetch('http://localhost:5000/api/settleup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ friendId, amount: Number(amount), groupId })
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message || 'Settlement recorded!');
-        fetchTransactions();
-        fetchSettlements();
-      })
-      .catch(() => alert('Network error'));
-    };
 
     fetchGroupName();
     fetchTransactions();

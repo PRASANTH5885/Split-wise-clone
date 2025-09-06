@@ -216,7 +216,7 @@
     });
 
     async function fetchGroupData() {
-      const res = await fetch(`http://localhost:5000/api/groups/${groupId}`, {
+      const res = await fetch(`https://splitwise-clone-1.onrender.com/api/groups/${groupId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -241,7 +241,7 @@
     }
 
     async function fetchExpenses() {
-      const res = await fetch(`http://localhost:5000/api/expenses?groupId=${groupId}`, {
+      const res = await fetch(`https://splitwise-clone-1.onrender.com/api/expenses?groupId=${groupId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const ul = document.getElementById('expensesList');

@@ -176,7 +176,7 @@
     }
     async function fetchUser() {
       try {
-        const res = await fetch('http://localhost:5000/api/auth/user', {
+        const res = await fetch('https://splitwise-clone-1.onrender.com/api/auth/user', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -200,7 +200,7 @@
       const password = e.target.password.value;
       const body = password ? { name, email, password } : { name, email };
       try {
-        const res = await fetch('http://localhost:5000/api/auth/user', {
+        const res = await fetch('https://splitwise-clone-1.onrender.com/api/auth/user', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

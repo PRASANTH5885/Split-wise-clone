@@ -139,7 +139,7 @@
     });
 
     async function fetchFriends() {
-      const res = await fetch('http://localhost:5000/api/friends', {
+      const res = await fetch('https://splitwise-clone-1.onrender.com/api/friends', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const ul = document.getElementById('friendsList');

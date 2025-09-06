@@ -108,7 +108,7 @@
     }
 
     async function fetchGroups() {
-      const res = await fetch('http://localhost:5000/api/groups', {
+      const res = await fetch('https://splitwise-clone-1.onrender.com/api/groups', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const ul = document.getElementById('groupsList');
