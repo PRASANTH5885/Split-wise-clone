@@ -26,7 +26,7 @@ app.use('/api/groupTransactions', groupTransactionsRouter);
 const frontendPath = path.join(__dirname, '../frontend');
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'getstarted.html'));
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.use(express.static(frontendPath));
